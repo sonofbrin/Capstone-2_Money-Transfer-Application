@@ -46,6 +46,10 @@ public class ConsoleService {
         System.out.println();
     }
 
+    public void printCurrentBalance(BigDecimal balance) {
+        System.out.println("\nYour current account balance is: $" + balance);
+    }
+
     public UserCredentials promptForCredentials() {
         String username = promptForString("Username: ");
         String password = promptForString("Password: ");
