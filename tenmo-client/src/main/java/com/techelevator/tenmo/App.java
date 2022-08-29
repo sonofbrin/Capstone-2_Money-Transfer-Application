@@ -1,12 +1,14 @@
 package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
 import com.techelevator.tenmo.services.TenmoService;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class App {
@@ -15,7 +17,7 @@ public class App {
 
     private final ConsoleService consoleService = new ConsoleService();
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
-    private final TenmoService tenmoService = new TenmoService(API_BASE_URL);
+    private final TenmoService tenmoService = new TenmoService();
 
     private AuthenticatedUser currentUser;
 
@@ -80,6 +82,8 @@ public class App {
                 sendBucks();
             } else if (menuSelection == 5) {
                 requestBucks();
+            } else if (menuSelection == 6) {
+                listUsers();
             } else if (menuSelection == 0) {
                 continue;
             } else {
@@ -89,43 +93,168 @@ public class App {
         }
     }
 
-
         private void viewCurrentBalance() {
-            consoleService.printCurrentBalance(tenmoService.getBalance(currentUser));
+            System.out.println();
+            System.out.println("Your current account balance is: " + tenmoService.getBalance(currentUser.getUser().getId()));}
+//            consoleService.printCurrentBalance(tenmoService.getBalance(currentUser));}
+
+//List All Users
+private void listUsers() {
+    System.out.println("---------------------------------------------------------------");
+    System.out.printf("%36s", "Users\n\n");
+    System.out.printf("%25s %15s", "ID", "Name\n");
+    System.out.println("---------------------------------------------------------------");
+
+    for (User user : tenmoService.listAllUsers()) {
+        if(user.getUsername().equals(currentUser.getUser().getUsername())) {
+            System.out.print("");
+        } else {
+            System.out.printf("%25d %15s", user.getId(), user.getUsername());
+            System.out.println();
         }
+    }
+    System.out.println("---------------------------------------------------------------");
+}
 
 
-	private void viewTransferHistory() {
-		// TODO Auto-generated method stub
-		
-	}
+    // TODO Auto-generated method stub
+    private void viewTransferHistory() {
+        String sent = "Sent to: ";
+        String received = "Received from: ";
 
-	private void viewPendingRequests() {
-		// TODO Auto-generated method stub
-		
-	}
 
-	private void sendBucks() {
-		// TODO Auto-generated method stub
-		// list other users
-        List<User> otherUsers = tenmoService.listOtherUsers(currentUser.getUser().getId());
-        if (otherUsers == null) {
-            System.out.println("There are no other users registered.");
-            return;
+        System.out.println("---------------------------------------------------------------");
+        System.out.printf("%36s", "Transfers\n\n");
+        System.out.printf("%-10s %16s %-12s $%-10s %10s", "ID", "From/To", "User", "Amount", "Status\n");
+        System.out.println("---------------------------------------------------------------");
+
+        for (Transfer transfer : tenmoService.listTransferHistory(currentUser.getUser().getId())) {
+            if (transfer.getTransferStatusId() != 1) {
+
+                if(currentUser.getUser().getId() == tenmoService.getUserIDFromAccount(transfer.getFromAccountId())) {
+                    System.out.printf("%-10d %16s %-12s $%-10.2f %10s", transfer.getId(), sent,
+                            tenmoService.getUserNameFromAccountId(transfer.getToAccountId()),
+                            transfer.getTransferAmount(), transfer.printStatusName(transfer));
+                    System.out.println();
+
+                }
+                else {
+                    System.out.printf("%-10d %16s %-12s $%-10.2f %10s", transfer.getId(), received,
+                            tenmoService.getUserNameFromAccountId(transfer.getFromAccountId()),
+                            transfer.getTransferAmount(), transfer.printStatusName(transfer));
+                    System.out.println();
+                }
+            }
         }
-        consoleService.printUserList(otherUsers);
-        // Enter ID of user you are sending to (0 to cancel):
+        System.out.println("---------------------------------------------------------------");
 
-        // Enter amount:
+        int viewTransferChoice = consoleService.promptForInt("\nPlease enter transfer ID to view details (0 to cancel): ");
+        for (Transfer transfer : tenmoService.listTransferHistory(currentUser.getUser().getId())) {
+            String fromUsername = tenmoService.getUserNameFromAccountId(transfer.getFromAccountId());
+            String toUsername = tenmoService.getUserNameFromAccountId(transfer.getToAccountId());
+            if (viewTransferChoice == transfer.getId()){
+                System.out.println("-------------------------\n       Transfer Details       \n-------------------------");
+                System.out.println("ID: " + transfer.getId());
+                System.out.println("From: " + fromUsername);
+                System.out.println("To: " + toUsername);
+                System.out.println("Type: " + transfer.printTypeName(transfer));
+                System.out.println("Status: " + transfer.printStatusName(transfer));
+                System.out.println("Amount: $" + transfer.getTransferAmount());
+            }
+        }
+    }
 
-        // set up transaction, rollback on exception?
+    // TODO Auto-generated method stub
+    private void viewPendingRequests() {
+        String sent = "Sent to: ";
+        String received = "Received from: ";
+
+        System.out.println("---------------------------------------------------------------");
+        System.out.printf("%42s", "Pending Transfers\n\n");
+        System.out.printf("%-10s %16s %-12s $%-10s %10s", "ID", "From/To", "User", "Amount", "Status\n");
+        System.out.println("---------------------------------------------------------------");
+        for (Transfer transfer : tenmoService.listTransferHistory(currentUser.getUser().getId())) {
+            if (transfer.getTransferStatusId() == 1) {
+                if(currentUser.getUser().getId() == tenmoService.getUserIDFromAccount(transfer.getFromAccountId())) {
+
+                    System.out.printf("%-10d %16s %-12s $%-10.2f %10s", transfer.getId(), sent,
+                            tenmoService.getUserNameFromAccountId(transfer.getToAccountId()),
+                            transfer.getTransferAmount(), transfer.printStatusName(transfer));
+                    System.out.println();
+                }
+                else {
+                    System.out.printf("%-10d %16s %-12s $%-10.2f %10s", transfer.getId(), received,
+                            tenmoService.getUserNameFromAccountId(transfer.getFromAccountId()),
+                            transfer.getTransferAmount(), transfer.printStatusName(transfer));
+                    System.out.println();
+                }
+            }
+            else if (transfer.getTransferStatusId() != 1){
+                continue;
+            }
+            else {
+                System.out.println("You have no pending transfers.");
+            }
+
+        }
+        int pendingIDChoice = consoleService.promptForInt("\nPlease enter transfer ID to approve/reject (0 to cancel): ");
+        if(pendingIDChoice != 0) {
+            consoleService.printAcceptMenu();
+            int acceptTransferChoice = consoleService.promptForInt("Please choose an option: ");
+
+            if(currentUser.getUser().getId() != tenmoService.getUserIDFromAccount(tenmoService.getTransferByID(pendingIDChoice).getFromAccountId())) {
+                if(acceptTransferChoice == 1) {
+                    tenmoService.updateTransfer(tenmoService.getTransferByID(pendingIDChoice), 2);
+                }
+                else if(acceptTransferChoice == 2) {
+                    tenmoService.updateTransfer(tenmoService.getTransferByID(pendingIDChoice), 3);
+                }
+            }
+            else {
+                System.out.println("You don't have permission to do this.");
+            }
+        }
+    }
 
 
-	}
+    // TODO Auto-generated method stub
+    private void sendBucks() {
+        listUsers();
 
-	private void requestBucks() {
-		// TODO Auto-generated method stub
-		
-	}
+        int toUserID = consoleService.promptForInt("Please Enter a User ID: ");
+        BigDecimal amount = consoleService.promptForBigDecimal("Please enter the amount you would like to send: ");
+        int fromAccount = tenmoService.getAccountIDFromUserID(currentUser.getUser().getId());
+        int toAccount = tenmoService.getAccountIDFromUserID(toUserID);
+
+        Transfer transfer = new Transfer(toAccount, fromAccount, amount, 2);
+        transfer.setTransferStatusId(2);
+        tenmoService.sendMoney(transfer);
+    }
+
+
+    // TODO Auto-generated method stub
+    private void requestBucks() {
+        listUsers();
+
+        int toUserID = consoleService.promptForInt("Please Enter a User ID: ");
+        BigDecimal amount = consoleService.promptForBigDecimal("Please enter the amount you would like to request: ");
+        int fromAccount = tenmoService.getAccountIDFromUserID(currentUser.getUser().getId());
+        int toAccount = tenmoService.getAccountIDFromUserID(toUserID);
+
+        Transfer transfer = new Transfer(toAccount, fromAccount, amount, 1);
+        transfer.setTransferStatusId(1);
+        tenmoService.requestMoney(transfer);
+    }
 
 }
+//        List<User> otherUsers = tenmoService.listOtherUsers(currentUser.getUser().getId());
+//        if (otherUsers == null) {
+//            System.out.println("There are no other users registered.");
+//            return;
+//        }
+//        consoleService.printUserList(otherUsers);
+//        // Enter ID of user you are sending to (0 to cancel):
+//
+//        // Enter amount:
+//
+//        // set up transaction, rollback on exception?

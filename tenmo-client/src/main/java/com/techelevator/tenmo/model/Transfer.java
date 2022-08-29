@@ -1,18 +1,18 @@
 package com.techelevator.tenmo.model;
 
-
-import javax.validation.constraints.DecimalMin;
 import java.math.BigDecimal;
 
 public class Transfer {
 
-    private int id;
-    @DecimalMin(value = "0.01", inclusive = true)
+    private Long id;
+
     private BigDecimal transferAmount;
     private int toAccountId;
     private int fromAccountId;
     private int transferTypeId;
-    private int transferStatusId;
+    private int transferStatusId = 2;
+    private String message = "";
+
 
     public Transfer(){}
 
@@ -51,11 +51,11 @@ public class Transfer {
         return transferTypeId;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -70,4 +70,30 @@ public class Transfer {
     public void setTransferStatusId(int transferStatusId) {
         this.transferStatusId = transferStatusId;
     }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String printStatusName(Transfer transfer) {
+        if(transfer.getTransferStatusId() == 1) {
+            return "Pending";
+        }
+        else if(transfer.getTransferStatusId() == 2) {
+            return "Approved";
+        }
+        else {return "Rejected"; }
+    }
+
+    public String printTypeName(Transfer transfer) {
+        if(transfer.getTransferTypeId() == 1) {
+            return "Request";
+        }
+        else {return "Send"; }
+    }
+
 }

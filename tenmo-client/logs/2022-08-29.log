@@ -1,0 +1,5 @@
+2022-08-29T18:07:37.031203 404 : [{"timestamp":"2022-08-29T23:07:37.017+00:00","status":404,"error":"Not Found","message":"No message available","path":"/users"}]
+2022-08-29T18:10:54.7247788 404 : [{"timestamp":"2022-08-29T23:10:54.712+00:00","status":404,"error":"Not Found","message":"No message available","path":"/users"}]
+2022-08-29T18:14:08.7699381 404 : [{"timestamp":"2022-08-29T23:14:08.757+00:00","status":404,"error":"Not Found","message":"No message available","path":"/users"}]
+2022-08-29T18:18:24.9523889 404 : [{"timestamp":"2022-08-29T23:18:24.939+00:00","status":404,"error":"Not Found","message":"No message available","path":"/users"}]
+2022-08-29T18:43:38.8438885 500 : [{"timestamp":"2022-08-29T23:43:38.829+00:00","status":500,"error":"Internal Server Error","message":"Incorrect result size: expected 1, actual 0","path":"/users/account/99"}]

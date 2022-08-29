@@ -24,9 +24,11 @@ public class ConsoleService {
     }
 
     public void printGreeting() {
-        System.out.println("*********************");
-        System.out.println("* Welcome to TEnmo! *");
-        System.out.println("*********************");
+        System.out.println();
+        System.out.println("██▓▒░ ►▬ WELCOME ▬◄ ░▒▓██");
+        System.out.println("██▓▒░ ►▬    TO   ▬◄ ░▒▓██");
+        System.out.println("██▓▒░ ►▬  TENMO  ▬◄ ░▒▓██");
+        System.out.println();
     }
 
     public void printLoginMenu() {
@@ -44,23 +46,34 @@ public class ConsoleService {
         System.out.println("3: View your pending requests");
         System.out.println("4: Send TE bucks");
         System.out.println("5: Request TE bucks");
+        System.out.println("6: View all users");
         System.out.println("0: Exit");
         System.out.println();
     }
 
-    public void printUserList(List<User> userList) {
-        System.out.println("-------------------------------------------");
-        System.out.println("Users");
-        System.out.println("ID          Name");
-        System.out.println("-------------------------------------------");
-        for (User user : userList) {
-            System.out.printf("%-12d%s\n", user.getId(), user.getUsername());
-        }
-        System.out.println("-------------------------------------------\n");
-    }
+//
+//    public void printUserList(List<User> userList) {
+//        System.out.println("-------------------------------------------");
+//        System.out.println("Users");
+//        System.out.println("ID          Name");
+//        System.out.println("-------------------------------------------");
+//        for (User user : userList) {
+//            System.out.printf("%-12d%s\n", user.getId(), user.getUsername());
+//        }
+//        System.out.println("-------------------------------------------\n");
+//    }
+//
+//    public void printCurrentBalance(BigDecimal balance) {
+//        System.out.println("\nYour current account balance is: $" + balance);
+//    }
 
-    public void printCurrentBalance(BigDecimal balance) {
-        System.out.println("\nYour current account balance is: $" + balance);
+
+    public void printAcceptMenu() {
+        System.out.println();
+        System.out.println("1: Approve");
+        System.out.println("2: Reject");
+        System.out.println("0: Don't approve or reject");
+        System.out.println();
     }
 
     public UserCredentials promptForCredentials() {
@@ -80,7 +93,7 @@ public class ConsoleService {
             try {
                 return Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
-                System.out.println("Please enter a number.");
+                System.out.print("Invalid. Please enter a valid ID: ");
             }
         }
     }

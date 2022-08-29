@@ -1,13 +1,24 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.User;
+import exceptions.InsufficientFundsException;
+import exceptions.InvalidAccountException;
 
-import java.security.Principal;
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface TransferDao {
 
-    List<Transfer> list();
+    Transfer getTransfer(int id);
 
-    List<Transfer> list(Principal principal);
+    List<Transfer> listTransfers(int id);
+
+    Transfer createTransfer(Transfer transfer) throws InvalidAccountException, InsufficientFundsException;
+
+    void updateTransfer(Transfer transfer, int statusID) throws InvalidAccountException, InsufficientFundsException;
+
+    String getTransferStatus(int id);
+
+    String getUserNameFromId(int transferId, String currentUser);
 }
