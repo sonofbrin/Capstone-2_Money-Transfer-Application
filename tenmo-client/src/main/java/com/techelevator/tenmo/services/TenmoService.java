@@ -13,6 +13,8 @@ import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class TenmoService {
@@ -24,10 +26,10 @@ public class TenmoService {
         this.baseUrl = url;
     }
 
-    public User[] listAllUsers() {
-        User[] users = null;
+    public List<User> listOtherUsers(long id) {
+        List<User> users = null;
         try {
-            users = restTemplate.getForObject(baseUrl + "users", User[].class);
+            users = Arrays.asList(restTemplate.getForObject(baseUrl + "users?exclude=" + id, User[].class));
         } catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
         }

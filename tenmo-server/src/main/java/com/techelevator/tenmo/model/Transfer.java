@@ -1,23 +1,22 @@
 package com.techelevator.tenmo.model;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 public class Transfer {
 
     private Long transferId;
-    @NotEmpty
+    @NotNull
     private int transferTypeId;
-    @NotEmpty
+    @NotNull
     private int transferStatusId;
-    @NotEmpty
-    private Long accountFromId;
-    @NotEmpty
-    private Long accountToId;
-    @NotEmpty
+    @NotNull
+    private Long accountFrom;
+    @NotNull
+    private Long accountTo;
+    @NotNull
     private int transferAmount;
 
-    public Transfer(){}
-
+    public Transfer() {}
 
     public Long getTransferId() {
         return transferId;
@@ -44,19 +43,19 @@ public class Transfer {
     }
 
     public Long getAccountFromId() {
-        return accountFromId;
+        return accountFrom;
     }
 
     public void setAccountFromId(Long accountFromId) {
-        this.accountFromId = accountFromId;
+        this.accountFrom = accountFromId;
     }
 
     public Long getAccountToId() {
-        return accountToId;
+        return accountTo;
     }
 
     public void setAccountToId(Long accountToId) {
-        this.accountToId = accountToId;
+        this.accountTo = accountToId;
     }
 
     public int getTransferAmount() {

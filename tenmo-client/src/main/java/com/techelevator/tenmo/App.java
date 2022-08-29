@@ -1,12 +1,13 @@
 package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
 import com.techelevator.tenmo.services.TenmoService;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 public class App {
 
@@ -106,7 +107,20 @@ public class App {
 
 	private void sendBucks() {
 		// TODO Auto-generated method stub
-		
+		// list other users
+        List<User> otherUsers = tenmoService.listOtherUsers(currentUser.getUser().getId());
+        if (otherUsers == null) {
+            System.out.println("There are no other users registered.");
+            return;
+        }
+        consoleService.printUserList(otherUsers);
+        // Enter ID of user you are sending to (0 to cancel):
+
+        // Enter amount:
+
+        // set up transaction, rollback on exception?
+
+
 	}
 
 	private void requestBucks() {

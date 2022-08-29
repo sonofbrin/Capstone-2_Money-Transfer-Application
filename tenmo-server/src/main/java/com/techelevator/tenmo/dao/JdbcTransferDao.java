@@ -1,7 +1,6 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Transfer;
-import com.techelevator.tenmo.model.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -26,7 +25,7 @@ public class JdbcTransferDao implements TransferDao {
     }
 
     @Override
-    public List<Transfer> list(Principal principal){
+    public List<Transfer> list(Principal principal) {
         List<Transfer> transfers = new ArrayList<>();
         String sql = "Select transfer_id As 'Id', tenmo_user.username As 'username', amount From transfer " +
                 "Join account On transfer.account_from = account.account_id " +
@@ -34,16 +33,14 @@ public class JdbcTransferDao implements TransferDao {
                 "Where tenmo_user.user_id = ?";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, principal.getName());
         while (results.next()){
-            Transfer allTransfers = mapRoadToTransfer(results);
+            Transfer allTransfers = mapRowToTransfer(results);
             transfers.add(allTransfers);
         }
         return transfers;
     }
 
-   
 
-
-    private Transfer mapRoadToTransfer(SqlRowSet srs){
+    private Transfer mapRowToTransfer(SqlRowSet srs){
         Transfer t = new Transfer();
         t.setTransferId(srs.getLong("transfer_id"));
         t.setTransferAmount(srs.getInt("amount"));
