@@ -1,7 +1,6 @@
 package com.techelevator.tenmo.model;
 
 //Maps error message to POJO and prints error message client side
-//plain old Java object (POJO) is an ordinary Java object, not bound by any special restriction.
 public class ErrorMessage {
     private String message;
     private String timestamp;

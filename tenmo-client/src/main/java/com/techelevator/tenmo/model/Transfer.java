@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 public class Transfer {
 
     private Long id;
-
     private BigDecimal transferAmount;
     private int toAccountId;
     private int fromAccountId;
@@ -80,20 +79,21 @@ public class Transfer {
     }
 
     public String printStatusName(Transfer transfer) {
-        if(transfer.getTransferStatusId() == 1) {
+        if (transfer.getTransferStatusId() == 1) {
             return "Pending";
-        }
-        else if(transfer.getTransferStatusId() == 2) {
+        } else if (transfer.getTransferStatusId() == 2) {
             return "Approved";
+        } else {
+            return "Rejected";
         }
-        else {return "Rejected"; }
     }
 
     public String printTypeName(Transfer transfer) {
-        if(transfer.getTransferTypeId() == 1) {
+        if (transfer.getTransferTypeId() == 1) {
             return "Request";
+        } else {
+            return "Send";
         }
-        else {return "Send"; }
     }
 
 }

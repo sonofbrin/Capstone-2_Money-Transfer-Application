@@ -60,14 +60,14 @@ public class TenmoController {
         List<Account> accountList = accountDao.findAll();
         List<User> userList = userDao.findAll();
         int from = 0;
-        for(Account account : accountList) {
-            if(account.getAccountID() == fromID){
+        for (Account account : accountList) {
+            if (account.getAccountID() == fromID) {
                 from = account.getUserID();
             }
         }
 
-        for(User user : userList) {
-            if(user.getId() == from) {
+        for (User user : userList) {
+            if (user.getId() == from) {
                 return user.getUsername();
             }
         }
@@ -97,7 +97,6 @@ public class TenmoController {
         return transfers;
     }
 
-
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/send", method = RequestMethod.POST)
     public void sendMoney(@Valid @RequestBody Transfer transfer) throws InvalidAccountException, InsufficientFundsException {
@@ -116,6 +115,5 @@ public class TenmoController {
     public void updateTransfer(@Valid @RequestBody Transfer transfer, @PathVariable("id") int statusID) throws InvalidAccountException, InsufficientFundsException{
         transferDao.updateTransfer(transfer, statusID);
     }
-
 
 }

@@ -89,12 +89,11 @@ public class JdbcTransferDao implements TransferDao{
 
     @Override
     public void updateTransfer(Transfer transfer, int statusID) throws InvalidAccountException, InsufficientFundsException {
-
         if (transfer.getFromAccountId() == transfer.getToAccountId()) {
             throw new InvalidAccountException();
         }
 
-        if(statusID == 2 && validateFunds(transfer, transfer.getToAccountId())) {
+        if (statusID == 2 && validateFunds(transfer, transfer.getToAccountId())) {
             transfer.setTransferStatusId(2);
             transfer.setTransferTypeId(2);
 
@@ -105,34 +104,25 @@ public class JdbcTransferDao implements TransferDao{
 
             updateFromAccount(transfer.getId(), transfer.getToAccountId());
             updateToAccount(transfer.getId(), transfer.getFromAccountId());
-
-        }
-        else if (statusID == 3) {
+        } else if (statusID == 3) {
             transfer.setTransferStatusId(3);
 
             String sql = "UPDATE transfer SET transfer_status_id = ? " +
                     "WHERE transfer_id = ?;";
 
             jdbcTemplate.update(sql, transfer.getTransferStatusId(), transfer.getId());
-
-        }
-        else {
+        } else {
             throw new InsufficientFundsException();
         }
     }
 
-
-
-
     @Override
-    public String getTransferStatus(int transferId){
-
+    public String getTransferStatus(int transferId) {
         String sql = "SELECT transfer_status_desc " +
                 "FROM transfer_status " +
                 "WHERE transfer_status_id = ?;";
 
         return jdbcTemplate.queryForObject(sql, String.class, transferId);
-
     }
 
     public void updateToAccount(int transferID, int accountID) {
@@ -158,11 +148,10 @@ public class JdbcTransferDao implements TransferDao{
 
         BigDecimal balance = jdbcTemplate.queryForObject(sql, BigDecimal.class, transferAccountID);
 
-        if(transfer.getTransferAmount().compareTo(balance) == 1) {
+        if (transfer.getTransferAmount().compareTo(balance) == 1) {
             return false;
         }
         return true;
-
     }
 
     public String getUserNameFromId(int transferId, String currentUser) {
